@@ -3,39 +3,72 @@ package com.ericsonmontero.tasklite.data.repository
 import com.ericsonmontero.tasklite.data.datasource.local.TaskDataSource
 import com.ericsonmontero.tasklite.data.mapper.toDomainModel
 import com.ericsonmontero.tasklite.data.mapper.toEntity
+import com.ericsonmontero.tasklite.data.models.Resource
 import com.ericsonmontero.tasklite.data.models.TaskState
 import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
 import com.ericsonmontero.tasklite.domain.repository.TaskRepository
-import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(
     private val taskDataSource: TaskDataSource
 ): TaskRepository {
-    override suspend fun getAllTasks(): List<TaskDomainModel> {
-        return taskDataSource.getAllTasks().map { it.toDomainModel() }
+    override fun getAllTasks(): Flow<Resource<List<TaskDomainModel>>> = flow {
+        emit(Resource.Loading())
+        try {
+            val tasks = taskDataSource.getAllTasks().map { it.toDomainModel() }
+            emit(Resource.Success(tasks))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An unknown error occurred"))
+        }
     }
 
-    override suspend fun getTaskById(id: Int): TaskDomainModel {
-        return taskDataSource.getTaskById(id).toDomainModel()
+    override fun getTaskById(id: Int): Flow<Resource<TaskDomainModel>> = flow {
+         try {
+            val task = taskDataSource.getTaskById(id).toDomainModel()
+            emit(Resource.Success(task))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An unknown error occurred"))
+        }
     }
 
-    override suspend fun updateTaskState(
+    override  fun updateTaskState(
         id: Int,
         state: TaskState
-    ) {
-        taskDataSource.updateTaskState(id, state.name)
+    ): Flow<Resource<Unit>> = flow {
+         try {
+            taskDataSource.updateTaskState(id, state.name)
+            emit( Resource.Success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An unknown error occurred"))
+        }
     }
 
-    override suspend fun deleteTask(id: Int) {
-        taskDataSource.deleteTask(id)
+    override fun deleteTask(id: Int): Flow<Resource<Unit>> = flow {
+        try {
+            taskDataSource.deleteTask(id)
+            emit( Resource.Success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An unknown error occurred"))
+        }
     }
 
-    override suspend fun insertTask(task: TaskDomainModel) {
-        taskDataSource.insertTask(task.toEntity())
+    override fun insertTask(task: TaskDomainModel): Flow<Resource<Unit>> = flow {
+        try {
+            taskDataSource.insertTask(task.toEntity())
+            emit( Resource.Success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An unknown error occurred"))
+        }
     }
 
-    override suspend fun updateTask(task: TaskDomainModel) {
-        taskDataSource.updateTask(task.toEntity())
+    override fun updateTask(task: TaskDomainModel): Flow<Resource<Unit>> = flow {
+        try {
+            taskDataSource.updateTask(task.toEntity())
+            emit( Resource.Success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "An unknown error occurred"))
+        }
     }
-
 }

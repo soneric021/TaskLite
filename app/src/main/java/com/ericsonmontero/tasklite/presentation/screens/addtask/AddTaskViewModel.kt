@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.ericsonmontero.tasklite.data.models.Resource
+import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
 import com.ericsonmontero.tasklite.domain.usecase.CreateTaskUseCase
 import com.ericsonmontero.tasklite.domain.usecase.DeleteTaskUseCase
 import com.ericsonmontero.tasklite.domain.usecase.GetTaskByIdUseCase
@@ -16,6 +18,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -47,15 +51,27 @@ class AddTaskViewModel @Inject constructor(
     private fun getTaskId(taskId: Int?) {
         taskId?.let {
             viewModelScope.launch {
-                val task = getTaskByIdUseCase.invoke(taskId)
-                _state.update {
-                    it.copy(
-                        title = task.title,
-                        description = task.description,
-                        taskDomainModel = task,
-                        isUpdate = true
-                    )
-                }
+              getTaskByIdUseCase.invoke(taskId).onEach { result ->
+                  when(result){
+                      is Resource.Error -> {
+
+                      }
+                      is Resource.Loading -> {
+
+                      }
+                      is Resource.Success<TaskDomainModel> -> {
+                          _state.update {
+                              it.copy(
+                                  title = result.data.title,
+                                  description = result.data.description,
+                                  taskDomainModel = result.data,
+                                  isUpdate = true
+                              )
+                          }
+                      }
+                  }
+              }.launchIn(viewModelScope)
+
             }
         }
     }
@@ -102,24 +118,41 @@ class AddTaskViewModel @Inject constructor(
     }
 
     private fun deleteTask() {
-        viewModelScope.launch {
-            deleteTaskUseCase.invoke(state.value.taskDomainModel?.id ?: return@launch)
-            _events.emit(AddTaskSideEffect.NavigateBack)
-        }
+        deleteTaskUseCase.invoke(state.value.taskDomainModel?.id ?: return).onEach {
+            when(it){
+                is Resource.Error -> {
+
+                }
+                is Resource.Loading -> {
+
+                }
+                is Resource.Success<*> -> {
+                    _events.emit(AddTaskSideEffect.NavigateBack)
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun updateTask() {
         val taskDomainModel = state.value.taskDomainModel ?: return
-
-        viewModelScope.launch {
-            updateTaskUseCase.invoke(
-                taskDomainModel.copy(
-                    title = state.value.title,
-                    description = state.value.description
-                )
+        updateTaskUseCase.invoke(
+            taskDomainModel.copy(
+                title = state.value.title,
+                description = state.value.description
             )
-            _events.emit(AddTaskSideEffect.NavigateBack)
-        }
+        ).onEach {
+            when(it){
+                is Resource.Error -> {
+
+                }
+                is Resource.Loading -> {
+
+                }
+                is Resource.Success<*> -> {
+                    _events.emit(AddTaskSideEffect.NavigateBack)
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun saveTask() {
@@ -135,9 +168,18 @@ class AddTaskViewModel @Inject constructor(
             }
             return
         }
-        viewModelScope.launch {
-            createTaskUseCase.invoke(state.value.title, state.value.description)
-            _events.emit(AddTaskSideEffect.NavigateBack)
-        }
+        createTaskUseCase.invoke(state.value.title, state.value.description).onEach {
+            when(it){
+                is Resource.Error -> {
+
+                }
+                is Resource.Loading -> {
+
+                }
+                is Resource.Success<*> -> {
+                    _events.emit(AddTaskSideEffect.NavigateBack)
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 }

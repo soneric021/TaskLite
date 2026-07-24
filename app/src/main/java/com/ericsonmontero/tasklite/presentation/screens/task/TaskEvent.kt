@@ -6,4 +6,5 @@ import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
 sealed class TaskEvent {
     data class OnChangeStateTask(val taskDomainModel: TaskDomainModel, val taskState: TaskState) : TaskEvent()
     object GetTasks : TaskEvent()
+    data class OnExpand(val isExpanded: Boolean, val taskState: TaskState) : TaskEvent()
 }

@@ -1,12 +1,10 @@
 package com.ericsonmontero.tasklite.domain.usecase
 
+import com.ericsonmontero.tasklite.data.models.Resource
 import com.ericsonmontero.tasklite.domain.repository.TaskRepository
-import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class DeleteTaskUseCase @Inject constructor(
-    private val repository: TaskRepository
-) {
-    suspend operator fun invoke(id: Int) {
-        repository.deleteTask(id)
-    }
+fun interface DeleteTaskUseCase {
+     operator fun invoke(id: Int): Flow<Resource<Unit>>
 }

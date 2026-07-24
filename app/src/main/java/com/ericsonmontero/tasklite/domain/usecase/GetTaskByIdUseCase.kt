@@ -1,14 +1,11 @@
 package com.ericsonmontero.tasklite.domain.usecase
 
+import com.ericsonmontero.tasklite.data.models.Resource
 import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
 import com.ericsonmontero.tasklite.domain.repository.TaskRepository
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
-class GetTaskByIdUseCase @Inject constructor(
-    private val repository: TaskRepository
-) {
-    suspend operator fun invoke(taskId: Int): TaskDomainModel {
-        return repository.getTaskById(taskId)
-    }
-
+fun interface GetTaskByIdUseCase {
+     operator fun invoke(taskId: Int): Flow<Resource<TaskDomainModel>>
 }

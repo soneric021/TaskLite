@@ -32,20 +32,15 @@ import org.junit.runner.RunWith
 @LargeTest
 class TaskScreenTest {
 
-    // 1. Regla de Hilt (debe ir primero: order = 0)
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
-    // 2. Regla de Compose (order = 1)
-    // Usamos createComposeRule() para evitar el conflicto con el setContent de MainActivity
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<HiltTestActivity>()
 
-    // ELIMINAMOS la RuleChain ya que estamos usando 'order' para manejar la prioridad
-
     @Before
     fun setup() {
-        hiltRule.inject() // Ahora Hilt ya está listo
+        hiltRule.inject()
         composeTestRule.setContent {
             TaskLiteTheme {
                 val navController = rememberNavController()
@@ -64,6 +59,7 @@ class TaskScreenTest {
             .enterTitle("Test Task")
             .enterDescription("Test Description")
             .clickSaveTask()
+            .clickCollapsablePendingTasks()
             .assertTaskExists("Test Task")
     }
     @Test
@@ -73,6 +69,7 @@ class TaskScreenTest {
             .enterTitle("Test Task2")
             .enterDescription("Test Description")
             .clickSaveTask()
+            .clickCollapsablePendingTasks()
             .clickTask("Test Task2")
             .clickDeleteTask()
             .clickDeleteDialog()
@@ -97,9 +94,13 @@ class TaskScreenTest {
             .enterTitle("Test Task3")
             .enterDescription("Test Description")
             .clickSaveTask()
-            .clickStateTaskByTag("pending_task")
-            .clickStateTaskByTag("in_progress_task")
+            .clickCollapsablePendingTasks()
+            .clickPendingState()
+            .clickCollapsableInProgressTasks()
+            .clickInProgressState()
+            .clickCollapsableCompletedTasks()
             .assertIsCompleteStateTask()
+
     }
     @Test
     fun editTaskTest(){
@@ -108,6 +109,7 @@ class TaskScreenTest {
             .enterTitle("Test Task4")
             .enterDescription("Test Description")
             .clickSaveTask()
+            .clickCollapsablePendingTasks()
             .clickTask("Test Task4")
             .clearTextFieldWithTag("text_field_title")
             .clearTextFieldWithTag("text_field_description")

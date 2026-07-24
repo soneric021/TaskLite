@@ -1,15 +1,11 @@
 package com.ericsonmontero.tasklite.domain.usecase
 
+import com.ericsonmontero.tasklite.data.models.Resource
 import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
 import com.ericsonmontero.tasklite.domain.repository.TaskRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class EditTaskUseCase @Inject constructor(
-    private val repository: TaskRepository
-) {
-    suspend operator fun invoke(taskDomainModel: TaskDomainModel) {
-        repository.updateTask(
-            taskDomainModel
-        )
-    }
+fun interface EditTaskUseCase {
+     operator fun invoke(taskDomainModel: TaskDomainModel) : Flow<Resource<Unit>>
 }
