@@ -5,20 +5,26 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasScrollToIndexAction
 import androidx.compose.ui.test.junit4.createComposeRule // Importación estándar
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.ericsonmontero.tasklite.data.models.TaskState
+import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
 import com.ericsonmontero.tasklite.pages.TaskListPage
 import com.ericsonmontero.tasklite.presentation.navigation.TaskNavHost
 import com.ericsonmontero.tasklite.presentation.navigation.TaskNavRoute
+import com.ericsonmontero.tasklite.presentation.screens.task.TaskContent
+import com.ericsonmontero.tasklite.presentation.screens.task.TaskUiState
 import com.ericsonmontero.tasklite.ui.theme.TaskLiteTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

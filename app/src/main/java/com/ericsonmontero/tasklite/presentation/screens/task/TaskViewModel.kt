@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ericsonmontero.tasklite.data.models.Resource
 import com.ericsonmontero.tasklite.data.models.TaskState
+import com.ericsonmontero.tasklite.domain.models.GroupTask
 import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
 import com.ericsonmontero.tasklite.domain.usecase.ChangeTaskStateUseCase
 import com.ericsonmontero.tasklite.domain.usecase.GetAllTasksUseCase
@@ -35,28 +36,19 @@ class TaskViewModel @Inject constructor(
             }
 
             is TaskEvent.OnExpand -> {
-                when(event.taskState){
-                    TaskState.PENDING -> {
-                        _state.update {
-                            it.copy(
-                                taskPendingIsExpanded = event.isExpanded
-                            )
-                        }
-                    }
-                    TaskState.IN_PROGRESS -> {
-                        _state.update {
-                            it.copy(
-                                taskInProgressIsExpanded = event.isExpanded
-                            )
-                        }
-                    }
-                    TaskState.COMPLETED ->  {
-                        _state.update {
-                            it.copy(
-                                taskCompletedIsExpanded = event.isExpanded
-                            )
-                        }
-                    }
+                _state.update {
+                    it.copy(
+                        groupTasks = it.groupTasks.map { groupTask ->
+                            if (groupTask.state == event.groupTask.state) {
+                                groupTask.copy(isExpanded = !groupTask.isExpanded)
+                            } else {
+                                groupTask
+                            }
+                        },
+                        taskPendingIsExpanded = if (event.groupTask.state == TaskState.PENDING) !it.taskPendingIsExpanded else it.taskPendingIsExpanded,
+                        taskInProgressIsExpanded = if (event.groupTask.state == TaskState.IN_PROGRESS) !it.taskInProgressIsExpanded else it.taskInProgressIsExpanded,
+                        taskCompletedIsExpanded = if (event.groupTask.state == TaskState.COMPLETED) !it.taskCompletedIsExpanded else it.taskCompletedIsExpanded
+                    )
                 }
             }
         }
@@ -64,13 +56,15 @@ class TaskViewModel @Inject constructor(
 
     private fun changeTaskState(taskDomainModel: TaskDomainModel, state: TaskState) {
         changeTaskStateUseCase.invoke(taskDomainModel.id, state).onEach {
-            when(it){
+            when (it) {
                 is Resource.Error -> {
 
                 }
-                is Resource.Loading ->{
+
+                is Resource.Loading -> {
 
                 }
+
                 is Resource.Success<*> -> {
                     getTasks()
                 }
@@ -85,13 +79,37 @@ class TaskViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             tasks = result.data,
-                            taskInProgress = result.data.filter { it.state == TaskState.IN_PROGRESS },
-                            taskCompleted = result.data.filter { it.state == TaskState.COMPLETED },
-                            taskPending = result.data.filter { it.state == TaskState.PENDING },
-                            isLoading = false
-                        )
+                            groupTasks = result.data.groupBy { it.state }.map { (state, tasks) ->
+                                when (state) {
+                                    TaskState.PENDING -> GroupTask(
+                                        id = "pending_tasks",
+                                        title = "Pendientes",
+                                        tasks = tasks,
+                                        state = state,
+                                        isExpanded = _state.value.taskPendingIsExpanded
+                                    )
+
+                                    TaskState.IN_PROGRESS -> GroupTask(
+                                        id = "in_progress_tasks",
+                                        title =
+                                            "En progreso",
+                                        tasks = tasks,
+                                        state = state,
+                                        isExpanded = _state.value.taskInProgressIsExpanded
+                                    )
+
+                                    TaskState.COMPLETED -> GroupTask(
+                                        id = "completed_tasks",
+                                        title = "Completadas",
+                                        tasks = tasks,
+                                        state = state,
+                                        isExpanded = _state.value.taskCompletedIsExpanded
+                                    )
+                                }
+                            })
                     }
                 }
+
                 is Resource.Error -> {
                     _state.update {
                         it.copy(
@@ -99,6 +117,7 @@ class TaskViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is Resource.Loading -> {}
             }
         }.launchIn(viewModelScope)
