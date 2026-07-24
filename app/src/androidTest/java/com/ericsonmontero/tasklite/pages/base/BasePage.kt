@@ -1,9 +1,8 @@
-package com.ericsonmontero.tasklite.pages
+package com.ericsonmontero.tasklite.pages.base
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 
 open class BasePage(protected val composeRule: ComposeContentTestRule) {

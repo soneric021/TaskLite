@@ -21,7 +21,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "com.ericsonmontero.tasklite.HiltTestRunner"
+        testInstrumentationRunner = "com.ericsonmontero.tasklite.runner.HiltTestRunner"
     }
 
     buildTypes {
@@ -56,6 +56,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test:runner:1.6.1")
     // Hilt testing dependencies
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.57.1")
     kspAndroidTest("com.google.dagger:hilt-android-compiler:2.57.1")

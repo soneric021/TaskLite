@@ -5,6 +5,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
+import com.ericsonmontero.tasklite.pages.base.BasePage
 
 class AddTaskPage(composeRule: ComposeContentTestRule) : BasePage(composeRule) {
     fun clickDeleteTask() = apply {

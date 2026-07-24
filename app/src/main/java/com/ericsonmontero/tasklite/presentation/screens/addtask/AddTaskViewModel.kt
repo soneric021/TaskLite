@@ -83,14 +83,16 @@ class AddTaskViewModel @Inject constructor(
             is AddTaskEvent.TitleChanged -> {
                 _state.update {
                     it.copy(
-                        title = event.title
+                        title = event.title,
+                        titleIsError = false
                     )
                 }
             }
             is AddTaskEvent.DescriptionChanged -> {
                 _state.update {
                     it.copy(
-                        description = event.description
+                        description = event.description,
+                        descriptionIsError = false
                     )
                 }
             }
@@ -158,13 +160,23 @@ class AddTaskViewModel @Inject constructor(
     private fun saveTask() {
         if (state.value.title.isBlank()){
             viewModelScope.launch {
-                _events.emit(AddTaskSideEffect.ShowSnackBar("Title is required"))
+                _events.emit(AddTaskSideEffect.ShowSnackBar("Titulo es requerido"))
+            }
+            _state.update {
+                it.copy(
+                    titleIsError = true
+                )
             }
             return
         }
         if (state.value.description.isBlank()){
             viewModelScope.launch {
-                _events.emit(AddTaskSideEffect.ShowSnackBar("Description is required"))
+                _events.emit(AddTaskSideEffect.ShowSnackBar("Descripcion es requerido"))
+            }
+            _state.update {
+                it.copy(
+                    descriptionIsError = true
+                )
             }
             return
         }

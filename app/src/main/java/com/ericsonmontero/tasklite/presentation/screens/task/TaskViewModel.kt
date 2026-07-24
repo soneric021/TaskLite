@@ -100,13 +100,16 @@ class TaskViewModel @Inject constructor(
 
                                     TaskState.COMPLETED -> GroupTask(
                                         id = "completed_tasks",
-                                        title = "Completadas",
+                                        title = "Completadas (${tasks.size})",
                                         tasks = tasks,
                                         state = state,
                                         isExpanded = _state.value.taskCompletedIsExpanded
                                     )
                                 }
-                            })
+                            }.sortedBy {
+                                it.state
+                            }
+                        )
                     }
                 }
 

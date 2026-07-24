@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">TaskLite</string>
+    <string name="tasklite_no_task_found">No se han encontrado areas…</string>
+    <string name="tasklite_title">Titulo</string>
+    <string name="tasklite_description">Descripcion</string>
+    <string name="tasklite_delete_task">Eliminar tarea</string>
+    <string name="tasklite_sure_to_delete_task">¿Estas seguro de eliminar la tarea?</string>
+    <string name="tasklite_delete">Eliminar</string>
+    <string name="tasklite_cancel">Cancelar</string>
 </resources>

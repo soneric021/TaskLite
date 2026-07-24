@@ -90,7 +90,17 @@ class TaskScreenTest {
             .enterTitle("")
             .enterDescription("Test Description")
             .clickSaveTask()
-            .assertDisplayedWithTitle("Title is required")
+            .assertDisplayedWithTitle("Titulo es requerido")
+
+    }
+    @Test
+    fun createTaskDescriptionErrorTest(){
+        TaskListPage(composeTestRule)
+            .navigateToAddTask()
+            .enterTitle("title")
+            .enterDescription("")
+            .clickSaveTask()
+            .assertDisplayedWithTitle("Descripcion es requerido")
 
     }
     @Test

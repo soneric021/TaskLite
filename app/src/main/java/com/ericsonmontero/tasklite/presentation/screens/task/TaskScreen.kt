@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.ericsonmontero.tasklite.R
 import com.ericsonmontero.tasklite.data.models.TaskState
 import com.ericsonmontero.tasklite.domain.models.GroupTask
 import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
@@ -132,19 +134,23 @@ fun TaskContent(
                 ) {
                     Text(
                         modifier = Modifier.testTag("empty_tasks"),
-                        text = "No tasks found"
+                        text = stringResource(R.string.tasklite_no_task_found)
                     )
                 }
             } else {
                 LazyColumn(
-                    modifier = Modifier.testTag("task_list").fillMaxSize(),
+                    modifier = Modifier
+                        .testTag("task_list")
+                        .fillMaxSize(),
                 ) {
                     state.groupTasks.forEachIndexed { index, groupTask ->
                         item {
                             Column(
-                                Modifier.testTag(groupTask.id).clickable{
-                                    onEvent.invoke(TaskEvent.OnExpand(groupTask))
-                                }
+                                Modifier
+                                    .testTag(groupTask.id)
+                                    .clickable {
+                                        onEvent.invoke(TaskEvent.OnExpand(groupTask))
+                                    }
                             ) {
                                 val angle by animateFloatAsState(
                                     targetValue = if (groupTask.isExpanded) 180f else 0f,
@@ -152,7 +158,9 @@ fun TaskContent(
                                     label = "ArrowRotation"
                                 )
                                 Row(
-                                    Modifier.fillMaxWidth().padding(16.dp),
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -197,9 +205,11 @@ fun TaskContent(
 @Composable
 fun TaskItem(modifier: Modifier = Modifier, task: TaskDomainModel, onEvent: (TaskEvent) -> Unit, onClick: () -> Unit = {}) {
     Row(
-        modifier = modifier.fillMaxWidth().clickable {
-           onClick.invoke()
-        },
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick.invoke()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         when(task.state){

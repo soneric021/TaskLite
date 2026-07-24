@@ -32,10 +32,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.ericsonmontero.tasklite.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -87,7 +89,9 @@ fun AddTaskContent(
             TopAppBar(
                 title = {
                     Text(
-                        modifier = Modifier.fillMaxWidth().testTag("top_app_bar_save_task"),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("top_app_bar_save_task"),
                         text = if (state.isUpdate) "Editar tarea" else "Agregar tareas",
                         textAlign = TextAlign.Center
                     )
@@ -122,7 +126,11 @@ fun AddTaskContent(
         bottomBar = {
             Button(onClick = {
                 onEvent.invoke(AddTaskEvent.SaveTask)
-            }, modifier = Modifier.fillMaxWidth().imePadding().testTag("save_task_button").padding( 12.dp), contentPadding = PaddingValues(16.dp)) {
+            }, modifier = Modifier
+                .fillMaxWidth()
+                .imePadding()
+                .testTag("save_task_button")
+                .padding(12.dp), contentPadding = PaddingValues(16.dp)) {
                 Text(text = if (state.isUpdate) "Actualizar" else "Guardar", style = MaterialTheme.typography.titleMedium)
             }
         },
@@ -131,27 +139,37 @@ fun AddTaskContent(
         }
     ) {
             innerPadding ->
-        Box(modifier.padding(innerPadding).fillMaxSize()){
+        Box(modifier
+            .padding(innerPadding)
+            .fillMaxSize()){
             Column(
-                Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             ) {
                 Spacer(modifier = Modifier.padding(16.dp))
                 OutlinedTextField(
-                    modifier = Modifier.testTag("text_field_title").fillMaxWidth(),
+                    modifier = Modifier
+                        .testTag("text_field_title")
+                        .fillMaxWidth(),
                     value = state.title,
                     onValueChange = {
                         onEvent.invoke(AddTaskEvent.TitleChanged(it))
                     },
-                    label = { Text("Titulo") },
+                    isError = state.titleIsError,
+                    label = { Text(stringResource(R.string.tasklite_title)) },
                 )
                 Spacer(modifier = Modifier.padding(4.dp))
                 OutlinedTextField(
-                    modifier = Modifier.testTag("text_field_description").fillMaxWidth(),
+                    modifier = Modifier
+                        .testTag("text_field_description")
+                        .fillMaxWidth(),
                     value = state.description,
+                    isError = state.descriptionIsError,
                     onValueChange = {
                         onEvent.invoke(AddTaskEvent.DescriptionChanged(it))
                     },
-                    label = { Text("Descripcion") },
+                    label = { Text(stringResource(R.string.tasklite_description)) },
                 )
             }
         }
@@ -164,10 +182,10 @@ fun AddTaskContent(
                 onEvent.invoke(AddTaskEvent.ToggleDeleteDialog)
             },
             title = {
-                Text("Eliminar tarea")
+                Text(stringResource(R.string.tasklite_delete_task))
             },
             text = {
-                Text("¿Estas seguro de eliminar la tarea?")
+                Text(stringResource(R.string.tasklite_sure_to_delete_task))
             },
             confirmButton = {
                 Button(
@@ -175,14 +193,14 @@ fun AddTaskContent(
                     onClick = {
                     onEvent.invoke(AddTaskEvent.DeleteTask)
                 }) {
-                    Text("Eliminar")
+                    Text(stringResource(R.string.tasklite_delete))
                 }
             },
             dismissButton = {
                 OutlinedButton(onClick = {
                     onEvent.invoke(AddTaskEvent.ToggleDeleteDialog)
                 }) {
-                    Text("Cancelar")
+                    Text(stringResource(R.string.tasklite_cancel))
                 }
 
             }

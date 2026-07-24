@@ -7,5 +7,7 @@ data class AddTaskState(
     val description:String = "",
     val taskDomainModel: TaskDomainModel? = null,
     val isUpdate:Boolean = false,
-    val showDeleteDialog: Boolean = false
+    val showDeleteDialog: Boolean = false,
+    val titleIsError:Boolean = false,
+    val descriptionIsError:Boolean = false
 )
