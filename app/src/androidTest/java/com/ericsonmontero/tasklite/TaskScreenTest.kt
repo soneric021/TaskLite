@@ -65,7 +65,6 @@ class TaskScreenTest {
             .enterTitle("Test Task")
             .enterDescription("Test Description")
             .clickSaveTask()
-            .clickCollapsablePendingTasks()
             .assertTaskExists("Test Task")
     }
     @Test
@@ -75,7 +74,6 @@ class TaskScreenTest {
             .enterTitle("Test Task2")
             .enterDescription("Test Description")
             .clickSaveTask()
-            .clickCollapsablePendingTasks()
             .clickTask("Test Task2")
             .clickDeleteTask()
             .clickDeleteDialog()
@@ -110,9 +108,7 @@ class TaskScreenTest {
             .enterTitle("Test Task3")
             .enterDescription("Test Description")
             .clickSaveTask()
-            .clickCollapsablePendingTasks()
             .clickPendingState()
-            .clickCollapsableInProgressTasks()
             .clickInProgressState()
             .clickCollapsableCompletedTasks()
             .assertIsCompleteStateTask()
@@ -125,7 +121,6 @@ class TaskScreenTest {
             .enterTitle("Test Task4")
             .enterDescription("Test Description")
             .clickSaveTask()
-            .clickCollapsablePendingTasks()
             .clickTask("Test Task4")
             .clearTextFieldWithTag("text_field_title")
             .clearTextFieldWithTag("text_field_description")
