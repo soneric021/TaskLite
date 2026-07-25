@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ericsonmontero.tasklite.R
+import com.ericsonmontero.tasklite.presentation.TestTags
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -91,8 +92,10 @@ fun AddTaskContent(
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag("top_app_bar_save_task"),
-                        text = if (state.isUpdate) "Editar tarea" else "Agregar tareas",
+                            .testTag(TestTags.TOP_APP_BAR_SAVE_TASK),
+                        text = if (state.isUpdate) stringResource(R.string.tasklite_edit_task) else stringResource(
+                            R.string.tasklite_add_task
+                        ),
                         textAlign = TextAlign.Center
                     )
                 },
@@ -109,7 +112,7 @@ fun AddTaskContent(
                 actions = {
                     if (state.isUpdate){
                         IconButton(
-                            modifier = Modifier.testTag("delete_task_button"),
+                            modifier = Modifier.testTag(TestTags.TASK_ITEM_DELETE_BUTTON),
                             onClick = {
                             onEvent.invoke(AddTaskEvent.ToggleDeleteDialog)
                         }) {
@@ -129,9 +132,11 @@ fun AddTaskContent(
             }, modifier = Modifier
                 .fillMaxWidth()
                 .imePadding()
-                .testTag("save_task_button")
+                .testTag(TestTags.SAVE_TASK_BUTTON)
                 .padding(12.dp), contentPadding = PaddingValues(16.dp)) {
-                Text(text = if (state.isUpdate) "Actualizar" else "Guardar", style = MaterialTheme.typography.titleMedium)
+                Text(text = if (state.isUpdate) stringResource(R.string.tasklite_update) else stringResource(
+                    R.string.tasklite_save
+                ), style = MaterialTheme.typography.titleMedium)
             }
         },
         snackbarHost = {
@@ -150,7 +155,7 @@ fun AddTaskContent(
                 Spacer(modifier = Modifier.padding(16.dp))
                 OutlinedTextField(
                     modifier = Modifier
-                        .testTag("text_field_title")
+                        .testTag(TestTags.TEXT_FIELD_TITLE)
                         .fillMaxWidth(),
                     value = state.title,
                     onValueChange = {
@@ -162,7 +167,7 @@ fun AddTaskContent(
                 Spacer(modifier = Modifier.padding(4.dp))
                 OutlinedTextField(
                     modifier = Modifier
-                        .testTag("text_field_description")
+                        .testTag(TestTags.TEXT_FIELD_DESCRIPTION)
                         .fillMaxWidth(),
                     value = state.description,
                     isError = state.descriptionIsError,
@@ -177,7 +182,7 @@ fun AddTaskContent(
 
     if (state.showDeleteDialog){
         AlertDialog(
-            modifier = Modifier.testTag("delete_task_dialog"),
+            modifier = Modifier,
             onDismissRequest = {
                 onEvent.invoke(AddTaskEvent.ToggleDeleteDialog)
             },
@@ -189,7 +194,7 @@ fun AddTaskContent(
             },
             confirmButton = {
                 Button(
-                    modifier = Modifier.testTag("delete_dialog_task_button"),
+                    modifier = Modifier.testTag(TestTags.TASK_ITEM_EDIT_DIALOG_DELETE_CONFIRMATION_BUTTON),
                     onClick = {
                     onEvent.invoke(AddTaskEvent.DeleteTask)
                 }) {
@@ -197,7 +202,9 @@ fun AddTaskContent(
                 }
             },
             dismissButton = {
-                OutlinedButton(onClick = {
+                OutlinedButton(
+                    modifier = Modifier.testTag(TestTags.TASK_ITEM_EDIT_DIALOG_CANCEL_BUTTON),
+                    onClick = {
                     onEvent.invoke(AddTaskEvent.ToggleDeleteDialog)
                 }) {
                     Text(stringResource(R.string.tasklite_cancel))

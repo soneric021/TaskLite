@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.ericsonmontero.tasklite.pages.base.BasePage
+import com.ericsonmontero.tasklite.presentation.TestTags
 
 class TaskListPage(composeRule: ComposeContentTestRule) : BasePage(composeRule) {
     fun navigateToAddTask(): AddTaskPage {
@@ -17,28 +18,29 @@ class TaskListPage(composeRule: ComposeContentTestRule) : BasePage(composeRule) 
         return AddTaskPage(composeRule)
     }
     fun clickInProgressState() = apply {
-        composeRule.onNodeWithTag("in_progress_task").performClick()
+        composeRule.onNodeWithTag(TestTags.IN_PROGRESS_TASK).performClick()
     }
     fun clickPendingState() = apply {
-        composeRule.onNodeWithTag("pending_task").performClick()
+        composeRule.onNodeWithTag(TestTags.PENDING_TASK).performClick()
     }
     fun clickCompleteState() = apply {
-        composeRule.onNodeWithTag("complete_task").performClick()
+        composeRule.onNodeWithTag(TestTags.COMPLETED_TASK).performClick()
     }
     fun assertIsCompleteStateTask() = apply {
-        composeRule.onNodeWithTag("complete_task").assertExists()
+        composeRule.onNodeWithTag(TestTags.COMPLETED_TASK).assertExists()
     }
 
     fun assertNotFoundTaskDisplayed() = apply {
-        composeRule.onNodeWithTag("empty_tasks").assertExists()
+        composeRule.onNodeWithTag(TestTags.EMPTY_TASKS).assertExists()
     }
+
     fun clickCollapsablePendingTasks() = apply {
         composeRule.onNodeWithTag("pending_tasks").performClick()
     }
     fun clickCollapsableInProgressTasks() = apply {
         composeRule.onNodeWithTag("in_progress_tasks").performClick()
     }
-    @OptIn(ExperimentalTestApi::class)
+
     fun clickCollapsableCompletedTasks() = apply {
         composeRule.onNodeWithTag("completed_tasks").performClick()
     }

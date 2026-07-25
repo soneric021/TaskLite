@@ -60,6 +60,7 @@ import com.ericsonmontero.tasklite.R
 import com.ericsonmontero.tasklite.data.models.TaskState
 import com.ericsonmontero.tasklite.domain.models.GroupTask
 import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
+import com.ericsonmontero.tasklite.presentation.TestTags
 import com.ericsonmontero.tasklite.presentation.components.CollapsibleComponent
 import com.ericsonmontero.tasklite.presentation.components.LoaderScreen
 import com.ericsonmontero.tasklite.presentation.navigation.TaskNavRoute
@@ -78,19 +79,13 @@ fun TaskScreen(
     LaunchedEffect(Unit) {
         onEvent.invoke(TaskEvent.GetTasks)
     }
-    if (state.isLoading && state.groupTasks.isEmpty()){
-        LoaderScreen(
-            Modifier.testTag("loader_screen")
-        )
-    } else {
-        TaskContent(
-            Modifier,
-            state = state,
-            onEvent = onEvent,
-            onBackPressed = onBackPressed,
-            goToEditTask = goToEditTask
-        )
-    }
+    TaskContent(
+        Modifier,
+        state = state,
+        onEvent = onEvent,
+        onBackPressed = onBackPressed,
+        goToEditTask = goToEditTask
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,7 +101,7 @@ fun TaskContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier.testTag("top_app_bar_task"),
+                modifier = Modifier.testTag(TestTags.TOP_APP_BAR_TASK),
                 title = {
                     Text("Tareas", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
                 }
@@ -114,12 +109,12 @@ fun TaskContent(
         },
         floatingActionButton = {
             FloatingActionButton(
-                modifier = Modifier.testTag("add_task_button"),
+                modifier = Modifier.testTag(TestTags.ADD_TASK_BUTTON),
                 onClick = {
                     goToEditTask.invoke(null)
                 }
             ) {
-                Text(text = "+")
+                Text(text = stringResource(R.string.tasklite_plus))
             }
         }
 
@@ -133,14 +128,14 @@ fun TaskContent(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        modifier = Modifier.testTag("empty_tasks"),
+                        modifier = Modifier.testTag(TestTags.EMPTY_TASKS),
                         text = stringResource(R.string.tasklite_no_task_found)
                     )
                 }
             } else {
                 LazyColumn(
                     modifier = Modifier
-                        .testTag("task_list")
+                        .testTag(TestTags.TASK_LIST)
                         .fillMaxSize(),
                 ) {
                     state.groupTasks.forEachIndexed { index, groupTask ->
@@ -166,7 +161,7 @@ fun TaskContent(
                                 ) {
                                     Text(
                                         groupTask.title,
-                                        Modifier.testTag("group_task_title_$index"),
+                                        Modifier,
                                         style = MaterialTheme.typography.titleSmall
                                     )
                                     Icon(
@@ -185,7 +180,7 @@ fun TaskContent(
                        if (groupTask.isExpanded){
                            items(groupTask.tasks.size){
                                TaskItem(
-                                   modifier = Modifier.testTag("group_task_${index}_task_item_$it"),
+                                   modifier = Modifier,
                                    task = groupTask.tasks[it],
                                    onEvent = onEvent,
                                    onClick = {
@@ -215,41 +210,41 @@ fun TaskItem(modifier: Modifier = Modifier, task: TaskDomainModel, onEvent: (Tas
         when(task.state){
             TaskState.PENDING -> {
                 IconButton(
-                    modifier = Modifier.testTag("pending_task"),
+                    modifier = Modifier.testTag(TestTags.PENDING_TASK),
                     onClick = {
                         onEvent.invoke(TaskEvent.OnChangeStateTask(task, TaskState.IN_PROGRESS))
                     }
                 ) {
                     Icon(
                         imageVector = Icons.Default.RadioButtonUnchecked,
-                        contentDescription = "Edit"
+                        contentDescription = "Pending button"
                     )
                 }
             }
             TaskState.IN_PROGRESS ->  {
                 IconButton(
-                    modifier = Modifier.testTag("in_progress_task"),
+                    modifier = Modifier.testTag(TestTags.IN_PROGRESS_TASK),
                     onClick = {
                         onEvent.invoke(TaskEvent.OnChangeStateTask(task, TaskState.COMPLETED))
                     }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Circle,
-                        contentDescription = "Edit",
+                        contentDescription = "In Progress Button",
                         tint = Yellow.copy(alpha = 0.5f)
                     )
                 }
             }
             TaskState.COMPLETED ->  {
                 IconButton(
-                    modifier = Modifier.testTag("complete_task"),
+                    modifier = Modifier.testTag(TestTags.COMPLETED_TASK),
                     onClick = {
                         onEvent.invoke(TaskEvent.OnChangeStateTask(task, TaskState.PENDING))
                     }
                 ) {
                     Icon(
                         imageVector = Icons.Default.CheckCircleOutline,
-                        contentDescription = "Edit",
+                        contentDescription = "Complete Task Button",
                         tint = Green
                     )
                 }

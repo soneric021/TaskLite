@@ -7,4 +7,9 @@
     <string name="tasklite_sure_to_delete_task">¿Estas seguro de eliminar la tarea?</string>
     <string name="tasklite_delete">Eliminar</string>
     <string name="tasklite_cancel">Cancelar</string>
+    <string name="tasklite_update">Actualizar</string>
+    <string name="tasklite_save">Guardar</string>
+    <string name="tasklite_edit_task">Editar tarea</string>
+    <string name="tasklite_add_task">Agregar tareas</string>
+    <string name="tasklite_plus">+</string>
 </resources>
