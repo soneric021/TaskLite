@@ -16,6 +16,10 @@ object TestTags {
     const val SAVE_TASK_BUTTON = "save_task_button"
     const val TOP_APP_BAR_TASK = "top_app_bar_task"
     const val TOP_APP_BAR_SAVE_TASK = "top_app_bar_save_task"
+    const val PENDING_TASKS = "pending_tasks"
+    const val IN_PROGRESS_TASKS = "in_progress_tasks"
+    const val COMPLETED_TASKS = "completed_tasks"
+
 
 
 }

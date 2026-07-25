@@ -8,6 +8,7 @@ import com.ericsonmontero.tasklite.domain.models.GroupTask
 import com.ericsonmontero.tasklite.domain.models.TaskDomainModel
 import com.ericsonmontero.tasklite.domain.usecase.ChangeTaskStateUseCase
 import com.ericsonmontero.tasklite.domain.usecase.GetAllTasksUseCase
+import com.ericsonmontero.tasklite.presentation.TestTags
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,7 +83,7 @@ class TaskViewModel @Inject constructor(
                             groupTasks = result.data.groupBy { it.state }.map { (state, tasks) ->
                                 when (state) {
                                     TaskState.PENDING -> GroupTask(
-                                        id = "pending_tasks",
+                                        id = TestTags.PENDING_TASKS,
                                         title = "Pendientes",
                                         tasks = tasks,
                                         state = state,
@@ -90,7 +91,7 @@ class TaskViewModel @Inject constructor(
                                     )
 
                                     TaskState.IN_PROGRESS -> GroupTask(
-                                        id = "in_progress_tasks",
+                                        id = TestTags.IN_PROGRESS_TASKS,
                                         title =
                                             "En progreso",
                                         tasks = tasks,
@@ -99,7 +100,7 @@ class TaskViewModel @Inject constructor(
                                     )
 
                                     TaskState.COMPLETED -> GroupTask(
-                                        id = "completed_tasks",
+                                        id = TestTags.COMPLETED_TASKS,
                                         title = "Completadas (${tasks.size})",
                                         tasks = tasks,
                                         state = state,

@@ -10,7 +10,7 @@ import com.ericsonmontero.tasklite.presentation.TestTags
 
 class TaskListPage(composeRule: ComposeContentTestRule) : BasePage(composeRule) {
     fun navigateToAddTask(): AddTaskPage {
-        composeRule.onNodeWithTag("add_task_button").performClick()
+        composeRule.onNodeWithTag(TestTags.ADD_TASK_BUTTON).performClick()
         return AddTaskPage(composeRule)
     }
     fun clickTask(title: String): AddTaskPage {
@@ -35,14 +35,14 @@ class TaskListPage(composeRule: ComposeContentTestRule) : BasePage(composeRule) 
     }
 
     fun clickCollapsablePendingTasks() = apply {
-        composeRule.onNodeWithTag("pending_tasks").performClick()
+        composeRule.onNodeWithTag(TestTags.PENDING_TASKS).performClick()
     }
     fun clickCollapsableInProgressTasks() = apply {
-        composeRule.onNodeWithTag("in_progress_tasks").performClick()
+        composeRule.onNodeWithTag(TestTags.IN_PROGRESS_TASKS).performClick()
     }
 
     fun clickCollapsableCompletedTasks() = apply {
-        composeRule.onNodeWithTag("completed_tasks").performClick()
+        composeRule.onNodeWithTag(TestTags.COMPLETED_TASKS).performClick()
     }
 
 
